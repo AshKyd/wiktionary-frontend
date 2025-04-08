@@ -1,5 +1,17 @@
+import { useState } from "preact/hooks";
+
 export function Word({ data }) {
   const { word, hyphenation, pos, etymologyText, senses } = data;
+  const [examplesExpanded, setExamplesExpanded]= useState(false);
+
+  function getExamples(examples){
+    if(examplesExpanded){
+    return examples;
+    }
+
+    return examples.slice(0,1)
+  }
+
   return (
     <article class="word">
       <h1 class="word__name">{word}</h1>
@@ -12,10 +24,10 @@ export function Word({ data }) {
             {glosses}
             {examples?.length > 0 && (
               <ul class="word__examples">
-                {examples.map(({ text, type, ref }) => {
+                {getExamples(examples).map(({ text, type, ref },i) => {
                   if (type === "quote") {
                     return (
-                      <li class="word__quote">
+                      <li class={`word__quote word__quote--${i > 0 ? 'subsequent' : 'first'}`}>
                         <blockquote>“{text}”</blockquote>
                         <p>
                           - <cite>{ref}</cite>
@@ -24,10 +36,12 @@ export function Word({ data }) {
                     );
                   }
 
-                  return <li class="word__example">{text}</li>;
+                  return <li class={`word__example word__example--${i > 0 ? 'subsequent' : 'first'}`}>{text}</li>;
                 })}
+                  {examples.length>1 && !examplesExpanded && <li><button onClick={() => setExamplesExpanded(true)}>More examples</button></li>}
               </ul>
             )}
+      
           </li>
         ))}
       </ol>
