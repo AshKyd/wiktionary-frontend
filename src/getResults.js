@@ -62,7 +62,8 @@ async function getLineStream(url, { onLine, onProgress }) {
   });
 }
 
-export async function search(word, { onProgress }) {
+export async function search(inputWord, { onProgress }) {
+  const word = inputWord.toLowerCase();
   let index = word.slice(0, 1);
   if (!index.match(/[a-z]/)) {
     index = 0;
@@ -75,7 +76,7 @@ export async function search(word, { onProgress }) {
     const [thisWord, hyphenation, pos, etymologyText, encodedSenses] =
       JSON.parse(line);
     words.push(thisWord);
-    if (word.toLowerCase() === thisWord.toLowerCase()) {
+    if (word === thisWord.toLowerCase()) {
       const senses = encodedSenses.map(([tags, glosses, examples]) => ({
         tags,
         glosses,
