@@ -24,7 +24,6 @@ function Page() {
   return (
     <>
       <App />
-      <Footer />
     </>
   );
 }

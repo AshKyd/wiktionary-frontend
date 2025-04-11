@@ -1,4 +1,4 @@
-export default function Footer() {
+export default function Footer({ edit = null }) {
   return (
     <footer>
       <p>
@@ -8,6 +8,19 @@ export default function Footer() {
           Creative Commons Attribution-ShareAlike License
         </a>
         .
+        {edit && (
+          <>
+            {" "}
+            <a
+              href={`https://en.wiktionary.org/wiki/${encodeURIComponent(
+                edit
+              )}`}
+            >
+              Edit {edit}
+            </a>
+            .
+          </>
+        )}
       </p>
     </footer>
   );

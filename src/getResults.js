@@ -1,13 +1,15 @@
 import soundex from "soundex";
 import { levenshteinEditDistance } from "levenshtein-edit-distance";
 
-async function getLineStream(url, onLine) {
+async function getLineStream(url, { onLine, onProgress }) {
   const controller = new AbortController();
   const signal = controller.signal;
   const response = await fetch(url, {
     cache: "force-cache",
     signal,
   });
+  const totalBytes = Number(response.headers.get("content-length"));
+  let receivedBytes = 0;
   const reader = response.body.getReader();
   const decoder = new TextDecoder();
   let buffer = "";
@@ -21,6 +23,13 @@ async function getLineStream(url, onLine) {
           if (done) {
             resolve();
             return;
+          }
+          if (onProgress) {
+            receivedBytes += value.length;
+            onProgress({
+              totalBytes,
+              receivedBytes,
+            });
           }
 
           // Decode the chunk into a string and append it to the buffer
@@ -53,14 +62,15 @@ async function getLineStream(url, onLine) {
   });
 }
 
-export async function search(word) {
+export async function search(word, { onProgress }) {
   let index = word.slice(0, 1);
   if (!index.match(/[a-z]/)) {
     index = 0;
   }
   const filename = `/data/defs-${index}.jsonl.br`;
   const matches = [];
-  await getLineStream(filename, (line) => {
+
+  function onLine(line) {
     const [thisWord, hyphenation, pos, etymologyText, encodedSenses] =
       JSON.parse(line);
     if (word.toLowerCase() === thisWord.toLowerCase()) {
@@ -71,6 +81,8 @@ export async function search(word) {
       }));
       matches.push({ word: thisWord, hyphenation, pos, etymologyText, senses });
     }
-  });
+  }
+
+  await getLineStream(filename, { onLine, onProgress });
   return matches;
 }

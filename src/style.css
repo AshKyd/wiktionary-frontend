@@ -87,17 +87,29 @@ body {
 }
 
 .word__quote--subsequent,
-.word__example--subsequent{
+.word__example--subsequent {
   animation: height-in 2s;
-  overflow:hidden;
+  overflow: hidden;
 }
 
-@keyframes height-in{
-  from{
-    max-height:0;
+@keyframes height-in {
+  from {
+    max-height: 0;
   }
-  to{
-    max-height:1000px;
+  to {
+    max-height: 1000px;
+  }
+}
+
+.fadein {
+  animation: fade-in 0.5s;
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 
@@ -106,4 +118,29 @@ footer {
   font-size: 0.8em;
   border-top: 1px solid var(--border);
   padding: 1rem 0;
+}
+
+.loading {
+  text-align: center;
+  code {
+    color: var(--colour-subtle);
+  }
+}
+
+.search-form {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+
+  button,
+  input {
+    height: 2em;
+    box-sizing: border-box;
+  }
+  button {
+    padding: 0 0.5rem;
+  }
+  fieldset {
+    padding: 1rem;
+  }
 }
