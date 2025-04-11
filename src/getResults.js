@@ -69,10 +69,12 @@ export async function search(word, { onProgress }) {
   }
   const filename = `/data/defs-${index}.jsonl.br`;
   const matches = [];
+  const words = [];
 
   function onLine(line) {
     const [thisWord, hyphenation, pos, etymologyText, encodedSenses] =
       JSON.parse(line);
+    words.push(thisWord);
     if (word.toLowerCase() === thisWord.toLowerCase()) {
       const senses = encodedSenses.map(([tags, glosses, examples]) => ({
         tags,
@@ -84,5 +86,32 @@ export async function search(word, { onProgress }) {
   }
 
   await getLineStream(filename, { onLine, onProgress });
-  return matches;
+
+  if (matches.length) {
+    return { matches, similarWords: [] };
+  }
+
+  const inputSoundex = soundex(word, true);
+  const similarWordsWorking = [];
+  words.forEach((thisWord) => {
+    const levenshteinDiff = levenshteinEditDistance(word, thisWord, true);
+    if (soundex(thisWord, true) === inputSoundex) {
+      similarWordsWorking.push({ thisWord, levenshteinDiff });
+    }
+    if (levenshteinDiff <= 2) {
+      similarWordsWorking.push({ thisWord, levenshteinDiff });
+    }
+  });
+  const similarWords = Array.from(
+    new Set(
+      similarWordsWorking
+        .sort((a, b) => a.levenshteinDiff - b.levenshteinDiff)
+        .map(({ thisWord }) => thisWord)
+    )
+  );
+
+  return {
+    matches,
+    similarWords,
+  };
 }

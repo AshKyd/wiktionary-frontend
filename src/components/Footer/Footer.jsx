@@ -8,8 +8,11 @@ export default function Footer({ edit = null }) {
           Creative Commons Attribution-ShareAlike License
         </a>
         .
+      </p>
+
+      <ul class="footer-links">
         {edit && (
-          <>
+          <li>
             {" "}
             <a
               href={`https://en.wiktionary.org/wiki/${encodeURIComponent(
@@ -18,10 +21,15 @@ export default function Footer({ edit = null }) {
             >
               Edit {edit}
             </a>
-            .
-          </>
-        )}
-      </p>
+          </li>
+        )}{" "}
+        <li>
+          <a href="/">Search again</a>
+        </li>
+        <li>
+          <a href="https://ash.ms/">Source</a>
+        </li>
+      </ul>
     </footer>
   );
 }

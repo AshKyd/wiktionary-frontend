@@ -24,11 +24,11 @@ export function Results({ query }) {
     );
   }
 
-  if (results && results.length) {
+  if (results && results.matches.length) {
     return (
       <>
         <div class="results fadein">
-          {results.map((result) => (
+          {results.matches.map((result) => (
             <Word data={result} />
           ))}
         </div>
@@ -36,6 +36,27 @@ export function Results({ query }) {
       </>
     );
   }
+
+  if (results && results.similarWords.length) {
+    return (
+      <>
+        <div class="results fadein">
+          <h1>Found similar words</h1>
+          <ul>
+            {results.similarWords.slice(0, 10).map((word) => (
+              <li>
+                <a href={`?q=${encodeURIComponent(word)}`}>{word}</a>
+              </li>
+            ))}
+          </ul>
+          <hr />
+          <Search value={query} />
+          <Footer />
+        </div>
+      </>
+    );
+  }
+
   if (results && !results.length) {
     return (
       <div class="results-404 fadein">
