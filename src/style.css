@@ -135,6 +135,17 @@ hr {
   }
 }
 
+.interface {
+  box-sizing: border-box;
+  border: 1px solid var(--border);
+  padding: 1rem 1.5rem;
+  border-radius: 0.3rem;
+  width: 32rem;
+  max-width: calc(100vw - 2rem);
+  margin: 0 auto;
+  position: relative;
+}
+
 .search-form {
   display: flex;
   justify-content: center;
@@ -147,9 +158,15 @@ hr {
   }
   button {
     padding: 0 0.5rem;
+    cursor: pointer;
   }
   fieldset {
     padding: 1rem;
+  }
+  .btn-subtle {
+    border: none;
+    background: none;
+    color: var(--colour);
   }
 }
 

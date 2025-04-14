@@ -29,6 +29,9 @@ export default function Footer({ edit = null }) {
         <li>
           <a href="https://ash.ms/">Source</a>
         </li>
+        <li>
+          <a href="?p=install">Install</a>
+        </li>
       </ul>
     </footer>
   );
